@@ -81,5 +81,33 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	r.Run(fmt.Sprintf(":%s", port))
+
+	// Check if the port is already in use, use a different one if necessary
+	err := r.Run(fmt.Sprintf(":%s", port))
+	if err != nil {
+		log.Printf("Port %s is already in use, switching to port 8081", port)
+		r.Run(":8081")
+	}
 }
+
+/* Folder Structure Example:
+   - main.go
+   - templates/
+	   - index.html
+*/
+
+/* index.html Template Example (Put this in 'templates/index.html'): 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Baby Photos</title>
+</head>
+<body>
+	<h1>Welcome to Baby Photos!</h1>
+	<form method="POST" action="/upload" enctype="multipart/form-data">
+		<input type="file" name="file" accept="image/*" required>
+		<button type="submit">Upload Photo</button>
+	</form>
+</body>
+</html>
+*/
