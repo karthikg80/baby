@@ -9,18 +9,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 var (
 	s3Session *s3.S3
-	bucketName = "your-s3-bucket-name" // Replace with your S3 bucket name
-	region     = "your-region"         // Replace with your AWS region
+	bucketName = os.Getenv("AWS_BUCKET_NAME") // Get S3 bucket name from environment variable
+	region     = os.Getenv("AWS_REGION")      // Get AWS region from environment variable
+	accessKey  = os.Getenv("AWS_ACCESS_KEY_ID") // Get AWS access key from environment variable
+	secretKey  = os.Getenv("AWS_SECRET_ACCESS_KEY") // Get AWS secret key from environment variable
 )
 
 func init() {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(region),
+		Region:      aws.String(region),
+		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, ""),
 	})
 	if err != nil {
 		log.Fatalf("Failed to create AWS session: %v", err)
