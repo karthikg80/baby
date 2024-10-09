@@ -22,6 +22,10 @@ var (
 )
 
 func init() {
+	if region == "" {
+		log.Fatalf("Missing AWS_REGION environment variable")
+	}
+
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(region),
 		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, ""),
